@@ -13,6 +13,7 @@ import { OctagonAlertIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
+import { FaGoogle, FaGithub } from 'react-icons/fa'
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -109,10 +110,24 @@ const SignInView = () => {
                                 </span>
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
-                                <Button variant='outline' type='button' className='w-full' disabled={pending}>
+                                <Button 
+                                    variant='outline' 
+                                    type='button' 
+                                    className='w-full' 
+                                    disabled={pending} 
+                                    onClick={() => authClient.signIn.social({ provider: 'google' })}
+                                >
+                                    <FaGoogle className='mr-2' />
                                     Google
                                 </Button>
-                                <Button variant='outline' type='button' className='w-full' disabled={pending}>
+                                <Button 
+                                    variant='outline' 
+                                    type='button' 
+                                    className='w-full' 
+                                    disabled={pending} 
+                                    onClick={() => authClient.signIn.social({ provider: 'github' })}
+                                >
+                                    <FaGithub className='mr-2' />
                                     Github
                                 </Button>
                             </div>

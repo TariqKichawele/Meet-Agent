@@ -13,6 +13,7 @@ import { OctagonAlertIcon } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { authClient } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
+import { FaGoogle, FaGithub } from 'react-icons/fa'
 
 const formSchema = z.object({
     name: z.string().min(1, { message: 'Name is required' }),
@@ -24,10 +25,12 @@ const formSchema = z.object({
     path: ['confirmPassword'],
     message: 'Passwords do not match',
 })
+
 const SignUpView = () => {
     const router = useRouter()
     const [error, setError] = useState<string | null>(null)
     const [pending, setPending] = useState(false);
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -148,10 +151,24 @@ const SignUpView = () => {
                                 </span>
                             </div>
                             <div className='grid grid-cols-2 gap-4'>
-                                <Button variant='outline' type='button' className='w-full' disabled={pending}>
+                                <Button 
+                                    variant='outline' 
+                                    type='button' 
+                                    className='w-full' 
+                                    disabled={pending} 
+                                    onClick={() => authClient.signIn.social({ provider: 'google' })}
+                                >
+                                    <FaGoogle className='mr-2' />
                                     Google
                                 </Button>
-                                <Button variant='outline' type='button' className='w-full' disabled={pending}>
+                                <Button 
+                                    variant='outline' 
+                                    type='button' 
+                                    className='w-full' 
+                                    disabled={pending} 
+                                    onClick={() => authClient.signIn.social({ provider: 'github' })}
+                                >
+                                    <FaGithub className='mr-2' />
                                     Github
                                 </Button>
                             </div>
