@@ -28,7 +28,6 @@ export default function Home() {
   };
 
   const handleSignIn = async () => {
-
     await authClient.signIn.email({
       email,
       password,
