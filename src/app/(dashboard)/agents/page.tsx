@@ -9,8 +9,15 @@ import AgentListHeader from '@/modules/agents/ui/components/AgentListHeader';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import type { SearchParams } from 'nuqs';
+import { loadSearchParams } from '@/modules/agents/params';
 
-const Agents = async () => {
+interface Props {
+    searchParams: Promise<SearchParams>
+}
+
+const Agents = async ({ searchParams }: Props) => {
+    const filters = await loadSearchParams(searchParams);
     const session = await auth.api.getSession({
         headers: await headers(),
     });
@@ -20,7 +27,9 @@ const Agents = async () => {
     }
 
     const queryClient = getQueryClient();
-    await queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
+    await queryClient.prefetchQuery(trpc.agents.getMany.queryOptions({
+        ...filters,
+    }));
 
     const dehydratedState = dehydrate(queryClient);
 
