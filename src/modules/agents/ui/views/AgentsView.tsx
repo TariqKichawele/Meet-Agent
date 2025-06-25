@@ -5,7 +5,7 @@ import ErrorState from '@/components/ErrorState';
 import LoadingState from '@/components/LoadingState';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import React from 'react'
-import { DataTable } from '../components/DataTable';
+import { DataTable } from '@/components/DataTable';
 import { columns } from '../components/Columns';
 import EmptyState from '@/components/EmptyState';
 import { useAgentsFilters } from '@/modules/agents/hooks/useAgentsFilters';
@@ -22,7 +22,7 @@ const AgentsView = () => {
 
   return (
     <div className='flex-1 pb-4 px-4 md:px-8 flex flex-col gap-y-4'>
-        <DataTable 
+        <DataTable
             columns={columns} 
             data={data.items} 
             onRowClick={(row) => router.push(`/agents/${row.id}`)} 
