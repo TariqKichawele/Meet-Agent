@@ -8,8 +8,14 @@ import React, { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { loadSearchParams } from '@/modules/meetings/params';
+import type { SearchParams } from 'nuqs';
 
-const MeetingsPage = async () => {
+interface Props {
+  searchParams: Promise<SearchParams>
+}
+
+const MeetingsPage = async ({ searchParams }: Props) => {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
@@ -18,8 +24,12 @@ const MeetingsPage = async () => {
       redirect("/sign-in");
     }
 
+    const params = await loadSearchParams(searchParams);
+
     const queryClient = getQueryClient();
-    void queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({}));
+    void queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({
+      ...params,
+    }));
     const dehydratedState = dehydrate(queryClient);
     
   return (

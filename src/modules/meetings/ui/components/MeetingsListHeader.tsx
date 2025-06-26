@@ -1,12 +1,33 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, XCircleIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import NewMeetingDialog from './NewMeetingDialog';
+import MeetingsSearchFilter from './MeetingsSearchFilter';
+import StatusFilter from './StatusFilter';
+import AgentIdFilter from './AgentIdFilter';
+import { useMeetingsFilter } from '@/modules/meetings/hooks/useMeetingsFilter';
+import { DEFAULT_PAGE } from '@/constants';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const MeetingsListHeader = () => {
+    const [filters, setFilters] = useMeetingsFilter();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const isAnyFilterModified = 
+        !!filters.status || 
+        !!filters.search || 
+        !!filters.agentId;
+
+    const onClearFilters = () => {
+        setFilters({
+            status: null,
+            search: "",
+            agentId: "",
+            page: DEFAULT_PAGE,
+        });
+    }
 
   return (
     <>
@@ -19,9 +40,23 @@ const MeetingsListHeader = () => {
                     New Meeting 
                 </Button>
             </div>
-            <div className='flex items-center gap-x-2 p-1'>
-                TODO: Add filters
-            </div>
+
+           <ScrollArea>
+                <div className='flex items-center gap-x-2 p-1'>
+                    <MeetingsSearchFilter />
+                    <StatusFilter />
+                    <AgentIdFilter />
+                    {
+                        isAnyFilterModified && (
+                            <Button variant="outline" onClick={onClearFilters}>
+                                <XCircleIcon className='size-4' />
+                                Clear 
+                            </Button>
+                        )
+                    }
+                </div>
+            <ScrollBar orientation='horizontal' />
+           </ScrollArea>
         </div>
     </>
   )
