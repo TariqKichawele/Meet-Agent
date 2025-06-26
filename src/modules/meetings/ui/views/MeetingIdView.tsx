@@ -10,6 +10,10 @@ import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { useConfirm } from '@/hooks/use-confirm';
 import UpdateMeetingDialog from '../components/UpdateMeetingDialog';
+import UpcomingState from '../components/UpcomingState';
+import ActiveState from '../components/ActiveState';
+import CancelledState from '../components/CancelledState';
+import ProcessingState from '../components/ProcessingState';
 
 interface Props {
   meetingId: string;
@@ -48,28 +52,40 @@ const MeetingIdView = ({ meetingId }: Props) => {
         await removeMeeting.mutateAsync({ id: meetingId });
     }
 
+    const isActive = data.status === 'active';
+    const isUpcoming = data.status === 'upcoming';
+    const isCancelled = data.status === 'cancelled';
+    const isCompleted = data.status === 'completed';
+    const isProcessing = data.status === 'processing';
+
   return (
-   <>
-    <RemoveConfirmation />
-    <UpdateMeetingDialog
-        open={updateDialogOpen}
-        onOpenChange={setUpdateDialogOpen}
-        initialValues={data}
-    />
-    <div className='flex-1 pb-4 px-4 md:px-8 flex flex-col gap-y-4'>
-        <MeetingIdViewHeader
-            meetingId={meetingId}
-            meetingName={data.name}
-            onEdit={() => setUpdateDialogOpen(true)}
-            onRemove={handleRemove} 
+    <>
+        <RemoveConfirmation />
+        <UpdateMeetingDialog
+            open={updateDialogOpen}
+            onOpenChange={setUpdateDialogOpen}
+            initialValues={data}
         />
-        <div className='flex flex-col gap-y-4'>
-            <div className='flex items-center justify-between'>
-                <h5 className='font-medium text-xl'>{data.name}</h5>
-            </div>
+        <div className='flex-1 pb-4 px-4 md:px-8 flex flex-col gap-y-4'>
+            <MeetingIdViewHeader
+                meetingId={meetingId}
+                meetingName={data.name}
+                onEdit={() => setUpdateDialogOpen(true)}
+                onRemove={handleRemove} 
+            />
+           {isCancelled && <CancelledState />}
+           {isUpcoming && ( 
+                <UpcomingState 
+                    meetingId={meetingId}
+                    onCancelMeeting={handleRemove}
+                    isCancelling={removeMeeting.isPending}
+                />
+            )}
+           {isActive && <ActiveState meetingId={meetingId} />}
+           {isCompleted && <div>Completed</div>}
+           {isProcessing && <ProcessingState />}
         </div>
-    </div>
-   </>
+    </>
   )
 }
 
