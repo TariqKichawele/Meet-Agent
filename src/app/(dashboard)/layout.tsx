@@ -6,11 +6,11 @@ import React from 'react'
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
-        <DashboardSidebar />
-        <main className='flex flex-col h-screen w-screen bg-muted'>
-            <DashboardNavbar />
-            {children}
-        </main>
+      <DashboardSidebar />
+      <main className='flex flex-col h-screen w-screen bg-muted'>
+        <DashboardNavbar />
+        {children}
+      </main>
     </SidebarProvider>
   )
 }

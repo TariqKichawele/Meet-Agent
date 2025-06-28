@@ -14,7 +14,7 @@ const ActiveState = ({ meetingId }: Props) => {
         <EmptyState 
             title='Meeting in progress'
             description='The meeting is in progress'
-            image='/active.svg'
+            image='/empty.svg'
         />
         <div className='flex flex-col-reverse lg:flex-row lg:justify-center items-center gap-2 w-full'>
             <Button asChild className='w-full lg:w-auto'>
